@@ -1,0 +1,74 @@
+{
+	"root": true,
+	"env": {
+		"browser": true,
+		"es6": true,
+		"node": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended",
+		"plugin:storybook/recommended",
+		"react-app",
+		"react-app/jest"
+	],
+	"settings": {
+		"react": {
+			"version": "detect"
+		},
+		"import/resolver": {
+			"node": {
+				"extensions": [".js", ".jsx", ".ts", ".tsx"]
+			}
+		}
+	},
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2018,
+		"sourceType": "module"
+	},
+	"plugins": ["react", "react-hooks", "@typescript-eslint", "prettier", "storybook"],
+	"rules": {
+		"prettier/prettier": [
+			"error",
+			{
+				"endOfLine": "auto"
+			}
+		],
+		"react/no-unescaped-entities": "off",
+		"react/react-in-jsx-scope": 0,
+		"react/prefer-stateless-function": 0,
+		"react/jsx-filename-extension": 0,
+		"react/jsx-one-expression-per-line": 0,
+		// props 에대한 type checking은 typescript로 대체
+		"react/prop-types": "off",
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": [
+			"warn",
+			{
+				"additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
+			}
+		],
+		"no-nested-ternary": 0,
+		// REST API req/res 에대한 정의가 복잡할 것으로 예상, global namespace 를 적극 활용하여 복잡도 해소
+		"@typescript-eslint/no-namespace": 0
+	},
+	"overrides": [
+		{
+			// or whatever matches stories specified in .storybook/main.js
+			"files": ["*.stories.@(ts|tsx|js|jsx|mjs|cjs)"],
+			"rules": {
+				// example of overriding a rule
+				"storybook/hierarchy-separator": "error",
+				// example of disabling a rule
+				"storybook/default-exports": "off",
+				"import/no-anonymous-default-export": "off"
+			}
+		}
+	]
+}
