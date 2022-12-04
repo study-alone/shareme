@@ -5,15 +5,13 @@ import { feedQuery, searchQuery } from '@shared/client/queries'
 
 import type { PinItem } from '@shared/store/pins'
 
-export const usePinList = (categoryId?: string) => {
-	const fetchPinList = useMemo(() => {
-		const query = categoryId ? (searchQuery(categoryId) as string) : feedQuery
-		return async () => {
-			return await client.fetch<PinItem[]>(query)
-		}
-	}, [categoryId])
+const fetch = (categoryId?: string) => {
+	const query = categoryId ? (searchQuery(categoryId) as string) : feedQuery
+	return async () => await client.fetch<PinItem[]>(query)
+}
 
-	const result = useQuery('getPinList', fetchPinList, {
+export const usePinList = (categoryId?: string) => {
+	const result = useQuery('getPinList', fetch(categoryId), {
 		suspense: true,
 	})
 

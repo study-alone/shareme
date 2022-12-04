@@ -1,51 +1,69 @@
-import { useCallback } from 'react'
 import { useMutation } from 'react-query'
-import { useRecoilValue } from 'recoil'
-import { pick, omit, get } from 'lodash-es'
+import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { identity } from 'lodash-es'
+import { useUserInfo } from '@shared/hooks'
 import { client } from '@shared/client'
-import { authReadOnlyState } from '@shared/store'
 
-interface SavePin {
-	_key: string
-	userId: string
-	postedBy: {
-		_type: 'postedBy'
-		_ref: string
+type SavePinParmas = {
+	title: string
+	about: string
+	destination: string
+	category: string | null
+	imageId?: string
+}
+
+const fetch = async ({ title, about, destination, category, imageId, userId }: SavePinParmas & { userId: string }) => {
+	const doc = {
+		_type: 'pin',
+		title,
+		about,
+		destination,
+		category,
+		image: {
+			_type: 'image',
+			asset: {
+				_type: 'reference',
+				_ref: imageId,
+			},
+		},
+		userId: userId,
+		postedBy: {
+			_type: 'postedBy',
+			_ref: userId,
+		},
 	}
-}
-type MutateSaveItem = SavePin & { id: string }
-
-const savePin = async (item: MutateSaveItem) => {
-	const id = get(pick(item, 'id'), 'id', undefined)
-	const items = [omit(item, 'id')]
-
-	console.log({ id, items })
-	return id
-		? await client.patch(id).setIfMissing({ save: [] }).insert('after', 'save[-1]', items).commit()
-		: undefined
+	return await client.create(doc)
 }
 
-export const useSavePin = (id: string) => {
-	const auth = useRecoilValue(authReadOnlyState)
-	const mutations = useMutation(savePin)
+export const useSavePin = () => {
+	const user = useUserInfo()
+	const navigate = useNavigate()
+	const [error, setError] = useState(false)
+	const { mutate } = useMutation(fetch, {
+		onSuccess(data) {
+			navigate('/')
+		},
+		onError(error) {
+			/** nothing */
+		},
+	})
 
-	const save = useCallback(
-		(callback?: () => void) => {
-			if (auth) {
-				console.log('@@@', id)
-				mutations.mutate({
-					id,
-					_key: auth.sub,
-					userId: auth.name,
-					postedBy: {
-						_type: 'postedBy',
-						_ref: auth.sub,
-					},
-				})
+	const savePin = useCallback<(params: SavePinParmas) => void>(
+		({ title, about, destination, imageId, category }) => {
+			const conditions = [title, about, destination, imageId, category, user?._id]
+			if (conditions.every(identity)) {
+				mutate({ title, about, destination, category, imageId, userId: user?._id as string })
+			} else {
+				setError(true)
+				setTimeout(() => setError(false), 2000)
 			}
 		},
-		[auth, id, mutations],
+		[mutate, user?._id],
 	)
 
-	return { ...omit(mutations, 'mutate'), savePin: save }
+	return {
+		savePin,
+		error,
+	}
 }

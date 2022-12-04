@@ -5,9 +5,12 @@ import { useRecoilState } from 'recoil'
 export const useLoading = () => {
 	const [ui, setUi] = useRecoilState(uiState)
 
-	const set = useCallback((loading: boolean | string) => {
-		setUi({ loading })
-	}, [])
+	const set = useCallback(
+		(loading: boolean | string) => {
+			setUi({ loading })
+		},
+		[setUi],
+	)
 
 	return { loading: ui.loading, set }
 }

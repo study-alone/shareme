@@ -4,7 +4,7 @@ import { urlFor } from '@shared/client'
 import { MdDownloadForOffline, AiTwotoneDelete, BsFillArrowUpRightCircleFill } from '@components/common'
 import { useRecoilValue } from 'recoil'
 import { authReadOnlyState } from '@shared/store'
-import { useSavePin, useDeletePin, useUserInfo } from '@shared/hooks'
+import { useFavoritePin, useDeletePin, useUserInfo } from '@shared/hooks'
 
 // styled
 import { Group, Destination, DeleteButton, SaveButton, ImageDownload, PostedBy } from '@components/common/Pin.styled'
@@ -21,7 +21,7 @@ export const Pin: React.FC<PinProps> = ({ pin }) => {
 	const user = useUserInfo()
 	const [savingPost, setSavingPost] = useState(false)
 
-	const { savePin } = useSavePin(pin._id)
+	const { savePin } = useFavoritePin(pin._id)
 	const { deletePin } = useDeletePin(pin._id)
 
 	const alreadySaved = useMemo(() => {
@@ -52,7 +52,7 @@ export const Pin: React.FC<PinProps> = ({ pin }) => {
 					<Destination href={destination} target="_blank" className="destination" rel="noreferrer">
 						{' '}
 						<BsFillArrowUpRightCircleFill />
-						{destination?.slice(8, 17)}...
+						{destination?.replace(/^(https?:\/\/)?/g, '')}...
 					</Destination>
 				) : undefined}
 				{postedBy?._id === user?._id && (

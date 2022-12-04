@@ -23,12 +23,53 @@ function App() {
 					<Route path="login" element={<Login />} />
 					<Route element={<DefaultLayout />}>
 						<Route path="user-profile/:userId" element={<UserProfileWithId />} />
-						<Route path="/" element={<NavbarLayout />}>
-							<Route path="/" element={<Feed />} />
-							<Route path="category/:categoryId" element={<Feed />} />
-							<Route path="pin-detail/:pinId" element={<PinDetail />} />
-							<Route path="create-pin" element={<CreatePin />} />
-							<Route path="search" element={<Search />} />
+						<Route
+							path="/"
+							element={
+								<Suspense fallback={<Spinner />}>
+									<NavbarLayout />
+								</Suspense>
+							}>
+							<Route
+								path="/"
+								element={
+									<Suspense fallback={<Spinner />}>
+										<Feed />
+									</Suspense>
+								}
+							/>
+							<Route
+								path="category/:categoryId"
+								element={
+									<Suspense fallback={<Spinner />}>
+										<Feed />
+									</Suspense>
+								}
+							/>
+							<Route
+								path="pin-detail/:pinId"
+								element={
+									<Suspense fallback={<Spinner />}>
+										<PinDetail />
+									</Suspense>
+								}
+							/>
+							<Route
+								path="create-pin"
+								element={
+									<Suspense fallback={<Spinner />}>
+										<CreatePin />
+									</Suspense>
+								}
+							/>
+							<Route
+								path="search"
+								element={
+									<Suspense fallback={<Spinner />}>
+										<Search />
+									</Suspense>
+								}
+							/>
 						</Route>
 					</Route>
 				</Routes>

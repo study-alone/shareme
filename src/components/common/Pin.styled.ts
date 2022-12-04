@@ -11,9 +11,15 @@ export const Group = styled('div')(() => {
 	}
 })
 
-export const ImageDownload = styled('a')(() => ({
-	...tw`hidden absolute top-2 left-2 bg-white w-9 h-9 p-2 rounded-full items-center justify-center text-black text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none`,
-}))
+export const ImageDownload = styled('a')<{ hover?: boolean; absolute?: boolean }>(
+	({ hover = true, absolute = true }) => {
+		return `
+			${hover ? 'display: none' : 'display: flex'};
+			${absolute ? 'position: absolute' : ''};`
+	},
+	() =>
+		tw`top-2 left-2 bg-white w-9 h-9 p-2 rounded-full items-center justify-center text-black text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none`,
+)
 
 export const SaveButton = styled('button')(() => ({
 	...tw`hidden absolute top-2 right-2 bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none`,
@@ -27,8 +33,17 @@ export const DeleteButton = styled('button')(() => ({
 	...tw`hidden absolute bottom-2 right-2 bg-white p-2 rounded-full w-8 h-8 items-center justify-center text-black opacity-75 hover:opacity-100 outline-none`,
 }))
 
-export const PostedBy = styled(Link)(() => ({
-	...tw`flex gap-2 mt-2 items-center`,
-	img: tw`w-8 h-8 rounded-full object-cover`,
-	p: tw`font-semibold capitalize`,
-}))
+export const PostedBy = styled(Link)<{ isPin?: boolean }>(
+	() => ({
+		...tw`flex gap-2 items-center mt-2`,
+		img: tw`w-8 h-8 rounded-full object-cover`,
+		p: tw`font-semibold capitalize`,
+	}),
+	({ isPin = true }) => {
+		return {
+			marginTop: isPin ? '0.5rem' : '1.25rem',
+			background: isPin ? 'transparent' : 'white',
+			borderRadius: isPin ? 'unset' : '0.5rem',
+		}
+	},
+)

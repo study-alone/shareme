@@ -17,6 +17,17 @@ declare global {
 		_id: string
 		_type: 'user'
 	}
+
+	interface PostedBy {
+		_id: string
+		image: string
+		userName: string
+	}
+
+	interface Save {
+		_key: string
+		postedBy: PostedBy
+	}
 }
 
 export {}
