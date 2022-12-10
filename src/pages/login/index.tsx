@@ -1,10 +1,10 @@
-import { GoogleLoginButton } from '@components/common'
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { styled } from '@mui/material'
 import tw from 'twin.macro'
+import { GoogleLoginButton } from '@components/common'
 
+// resource
 import shareVideo from '@assets/share.mp4'
 import logo from '@assets/logo_white.png'
-import { styled } from '@mui/material'
 
 const LoginPageContainer = styled('div')`
 	${tw`flex justify-start items-center flex-col h-screen`};
@@ -37,23 +37,21 @@ type LoginProps = {
 
 const LoginPage: React.FC<LoginProps> = () => {
 	return (
-		<GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_API_TOKEN}>
-			<LoginPageContainer>
-				<div className="wrapper">
-					<video loop controls={false} muted autoPlay className="background-video">
-						<source src={shareVideo} type="video/mp4" />
-					</video>
-					<div className="contents">
-						<div className="logo">
-							<img src={logo} alt="logo" />
-						</div>
-						<div className="login-button">
-							<GoogleLoginButton />
-						</div>
+		<LoginPageContainer>
+			<div className="wrapper">
+				<video loop controls={false} muted autoPlay className="background-video">
+					<source src={shareVideo} type="video/mp4" />
+				</video>
+				<div className="contents">
+					<div className="logo">
+						<img src={logo} alt="logo" />
+					</div>
+					<div className="login-button">
+						<GoogleLoginButton />
 					</div>
 				</div>
-			</LoginPageContainer>
-		</GoogleOAuthProvider>
+			</div>
+		</LoginPageContainer>
 	)
 }
 

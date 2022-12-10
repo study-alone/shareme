@@ -10,12 +10,10 @@ type NavbarProps = {
 	[key: string]: string
 }
 
-const Navbar: React.FC<NavbarProps> = (props) => {
+const Navbar: React.FC<NavbarProps> = () => {
 	const [search, setSearch] = useRecoilState(searchState)
 	const user = useUserInfo()
 	const navigate = useNavigate()
-
-	if (!user) return null
 
 	return (
 		<div className="flex gap-2 md:gap-5 w-full mt-5 pb-7">

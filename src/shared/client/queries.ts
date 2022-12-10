@@ -22,16 +22,15 @@ export const feedQuery = `*[_type == 'pin'] | order(_createdAt desc) {
 }`
 
 export const searchQuery = (search?: string) => {
-	if (!search) return null
 	const query = `*[_type == "pin" && title match '${search}*' || category match '${search}*' || about match '${search}*']{
         image {
-            asset => {
+            asset -> {
                 url
             }
         },
         _id,
         destination,
-        postedBy => {
+        postedBy -> {
             _id,
             userName,
             image
@@ -65,7 +64,10 @@ export const pinDetailQuery = (pinId: string) => {
       _id,
       title, 
       about,
-      category,
+      category->{
+        _id,
+        value
+      },
       destination,
       postedBy->{
         _id,
@@ -93,9 +95,10 @@ export const pinDetailQuery = (pinId: string) => {
 }
 
 export const pinDetailMorePinQuery = ({ category, _id }: { category?: string; _id?: string }) => {
-	const query = `*[_type == "pin" ${category ? `&& category == '${category}'` : ''} ${
-		_id ? `&& _id != '${_id}'` : ''
-	} ]{
+	console.log({ category })
+	const categoryFilter = category ? `&& references('${category}')` : ''
+	const _idFilter = _id ? `&& _id != "${_id}"` : ''
+	const query = `*[_type == "pin" ${_idFilter} ${categoryFilter} ]{
       image{
         asset->{
           url
@@ -118,4 +121,63 @@ export const pinDetailMorePinQuery = ({ category, _id }: { category?: string; _i
       },
     }`
 	return query
+}
+
+export const userCreatedPinsQuery = (userId: string) => {
+	const query = `*[_type == "pin" && userId == "${userId}"] | order(_createdAt desc) {
+        image {
+            asset -> {
+                url
+            }
+        },
+        _id,
+        destination,
+        postedBy -> {
+            _id,
+            userName,
+            image
+        },
+        save[] {
+            postedBy -> {
+                _id,
+                userName,
+                image
+            }
+        }
+    }`
+	return query
+}
+
+export const userQuery = (userId: string) => {
+	const query = `*[_type == "user" && _id == "${userId}"]`
+	return query
+}
+
+export const userSavedPinsQuery = (userId: string) => {
+	const query = `*[_type == "pin" && "${userId}" in save[].userId] | order(_createdAt desc) {
+        image {
+            asset -> {
+                url
+            }
+        },
+        _id,
+        destination,
+        postedBy -> {
+            _id,
+            userName,
+            image
+        },
+        save[] {
+            postedBy -> {
+                _id,
+                userName,
+                image
+            }
+        }
+    }`
+	return query
+}
+
+export const categoryQuery = () => {
+	return `*[_type == "category"]`
 }

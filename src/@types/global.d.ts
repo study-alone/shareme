@@ -28,6 +28,16 @@ declare global {
 		_key: string
 		postedBy: PostedBy
 	}
+
+	interface User {
+		_createdAt: string
+		_id: string
+		_rev: string
+		_type: string
+		_updatedAt: string
+		image: string
+		userName: string
+	}
 }
 
 export {}

@@ -36,7 +36,7 @@ export const useFavoritePin = (id: string) => {
 				mutations.mutate({
 					id,
 					_key: auth.sub,
-					userId: auth.name,
+					userId: auth.sub,
 					postedBy: {
 						_type: 'postedBy',
 						_ref: auth.sub,

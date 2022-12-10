@@ -7,7 +7,6 @@ import NavbarLayout from '@container/layout/NavbarLayout'
 
 const Home = lazy(() => import('@pages/index'))
 const Login = lazy(() => import('@pages/login'))
-const UserProfile = lazy(() => import('@pages/user-profile'))
 const UserProfileWithId = lazy(() => import('@pages/user-profile/user-id'))
 
 const CreatePin = lazy(() => import('@components/CreatePin'))
@@ -22,7 +21,14 @@ function App() {
 				<Routes>
 					<Route path="login" element={<Login />} />
 					<Route element={<DefaultLayout />}>
-						<Route path="user-profile/:userId" element={<UserProfileWithId />} />
+						<Route
+							path="user-profile/:userId"
+							element={
+								<Suspense fallback={<Spinner />}>
+									<UserProfileWithId />
+								</Suspense>
+							}
+						/>
 						<Route
 							path="/"
 							element={

@@ -19,7 +19,7 @@ type PinProps = {
 export const Pin: React.FC<PinProps> = ({ pin }) => {
 	const auth = useRecoilValue(authReadOnlyState)
 	const user = useUserInfo()
-	const [savingPost, setSavingPost] = useState(false)
+	const [savingPost /** setSavingPost */] = useState(false)
 
 	const { savePin } = useFavoritePin(pin._id)
 	const { deletePin } = useDeletePin(pin._id)

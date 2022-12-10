@@ -23,6 +23,7 @@ import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
 // import babelImport from 'vite-plugin-babel-import'
 import babelMacros from 'vite-plugin-babel-macros';
+import { createHtmlPlugin } from 'vite-plugin-html';
 /**
  * @see https://vitejs.dev/config/
  */
@@ -62,22 +63,17 @@ export default defineConfig(function (_a) {
         }),
         svgr(),
         babelMacros(),
+        createHtmlPlugin({
+            minify: true,
+            inject: {
+                data: {
+                    app_title: env.VITE_APP_TITLE
+                }
+            }
+        }),
     ];
-    // 개발 시 에만 사용되는 플러그인
-    // isDev &&
-    // 	plugins.push(
-    // 		// fake cert
-    // 		mkcert(),
-    // 	)
     return {
         server: {
-            // port: parseInt(env.VITE_PORT),
-            // https: isDev
-            // 	? true
-            // 	: {
-            // 			key: fs.readFileSync('./.cert/key.pem'),
-            // 			cert: fs.readFileSync('./.cert/cert.pem'),
-            // 	  },
             // 프록시 인스턴스 사용
             proxy: {
                 // 테스트 용

@@ -5,7 +5,10 @@ import { useQuery } from 'react-query'
 interface PinDetail {
 	_id: string
 	about: string
-	category: string
+	category: {
+		_id: string
+		value: string
+	}
 	comments:
 		| {
 				postedBy: PostedBy
@@ -27,9 +30,9 @@ const fetch = async ({ queryKey }: { queryKey: (string | undefined)[] }) => {
 	const [, pinId] = queryKey
 	const detailQuery = pinId ? pinDetailQuery(pinId) : null
 	const detail = detailQuery ? await client.fetch<PinDetail[]>(detailQuery) : null
-	const pinQuery = detail ? pinDetailMorePinQuery({ category: detail[0].category, _id: detail[0]._id }) : null
+	const pinQuery = detail ? pinDetailMorePinQuery({ category: detail[0].category._id, _id: detail[0]._id }) : null
 	const pin = pinQuery ? await client.fetch(pinQuery) : null
-	console.log({ pin, detail })
+	console.log({ queryKey, pin, detail })
 	return {
 		detail: detail?.at(0),
 		pin,

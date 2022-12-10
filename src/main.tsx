@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 import App from './App'
 import './index.css'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 const queryClient = new QueryClient()
 
@@ -25,9 +26,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 			<QueryClientProvider client={queryClient}>
 				<RecoilRoot>
 					<DebugObserver />
-					<Router>
-						<App />
-					</Router>
+					<GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_API_TOKEN}>
+						<Router>
+							<App />
+						</Router>
+					</GoogleOAuthProvider>
 				</RecoilRoot>
 				<ReactQueryDevtools />
 			</QueryClientProvider>
